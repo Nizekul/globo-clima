@@ -1,0 +1,6 @@
+@globo_clima_HostAddress = http://localhost:5105
+
+GET {{globo_clima_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
