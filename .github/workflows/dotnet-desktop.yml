@@ -28,7 +28,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Print USER_NAME
-        run: echo "USER_NAME:" ${{secrets.EC2_USER}}
+        run: 'echo "$SSH_KEY" > key'
 
       - name: Deploy to EC2
         env:
