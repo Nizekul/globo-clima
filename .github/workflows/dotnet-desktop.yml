@@ -24,7 +24,7 @@ jobs:
         env: 
             super_secret: ${{ secrets.DOCKER_USERNAME }}
         if: ${{ env.DOCKER_USERNAME == '' }}
-        run: 'echo "echo the secret \"MY_SECRET\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it'
+        run: 'echo "echo the secret \"MY_SECRET\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"'
         
       - name: Restore dependencies
         run: dotnet restore
