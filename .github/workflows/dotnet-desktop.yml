@@ -1,33 +1,42 @@
-name: Deploy
+name: Deploy Frontend to EC2
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "deployment" ]
 
 jobs:
-  Deploy:
-    name: Deploy to EC2
+  deploy:
+
     runs-on: ubuntu-latest
-    
     steps:
-      - uses: actions/checkout@v2 
-      - name: Build & Deploy
-        env:
-            PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-            HOSTNAME: ${{secrets.EC2_IP}}
-            USER_NAME: ${{secrets.EC2_USER}}
-      
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-              # Now we have got the access of EC2 and we will start the deploy .
-              cd /home/ubuntu/<PROJECT_DIRECTORY> &&
-              git checkout dev &&
-              git fetch --all &&
-              git reset --hard origin/dev &&
-              git pull origin dev &&
-              sudo npm i &&
-              sudo npm run build &&
-              sudo pm2 stop ./dist/index.js &&
-              sudo pm2 start ./dist/index.js
-              '
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2
+      env:
+        EC2_HOST: ${{ secrets.EC2_IP }}
+        EC2_USER: ${{ secrets.EC2_USER }}
+        EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
+        REACT_APP_BACKEND: ${{ secrets.BACKEND_URL }}
+      run: |
+        echo "${EC2_KEY}" > ec2-key.pem
+        chmod 600 ec2-key.pem
+
+        ssh -o StrictHostKeyChecking=no -i ec2-key.pem $EC2_USER@$EC2_HOST << 'EOF'
+
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          # Ensure the correct Node version is used
+          nvm use 20.17.0
+
+          cd /home/ubuntu/Portfolio/Portfolio-Frontend
+  
+          git pull origin deployment
+          npm install
+
+          npm run build
+  
+          sudo cp -r build/* /var/www/frontend
+
+        EOF
