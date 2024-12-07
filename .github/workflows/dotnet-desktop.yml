@@ -33,13 +33,12 @@ jobs:
           HOSTNAME: ${{ secrets.EC2_IP }}
           USER_NAME: ${{ secrets.EC2_USER }}
         run: |
-          echo "$PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << 'EOF'
-            cd /globo-clima/globo-clima
-            git pull origin main
-            docker build -t globo-clima .
-            docker stop globo-clima || true
-            docker rm globo-clima || true
-            docker run -d -p 5000:5000 --name globo-clima globo-clima
-          EOF
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+              cd /globo-clima/globo-clima
+              git pull origin main
+              docker build -t globo-clima .
+              docker stop globo-clima || true
+              docker rm globo-clima || true
+              docker run -d -p 5000:5000 --name globo-clima globo-clima
+              '
