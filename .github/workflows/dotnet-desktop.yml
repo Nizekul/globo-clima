@@ -40,4 +40,4 @@ jobs:
             docker build -t globo-clima .
             docker stop globo-clima || true 
             docker rm globo-clima || true
-            docker run -d -p 5000:5000 --name globo-clima globo-clima 
+            docker run -d -p 5000:5000 --name globo-clima globo-clima '
