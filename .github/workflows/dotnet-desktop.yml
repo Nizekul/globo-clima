@@ -25,7 +25,9 @@ jobs:
         run: dotnet restore
         
       - name: Print USER_NAME
-        run: 'echo "$EC2_USER" > key'
+        run: |
+          echo "O valor do segredo EC2_USER é: $EC2_USER"
+          echo "$EC2_USER" > key
 
       - name: Build
         run: dotnet build --no-restore
