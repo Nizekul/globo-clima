@@ -1,8 +1,7 @@
 using globo_clima.Models;
-using Microsoft.AspNetCore.Authorization;
+using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Text.Json;
+using System.Collections.Generic;
 
 namespace globo_clima.Controllers
 {
@@ -11,37 +10,47 @@ namespace globo_clima.Controllers
     public class CountriesController : Controller
     {
         private readonly ILogger<CountriesController> _logger;
-        private readonly HttpClient _httpClient;
+        private readonly CountryService _countryService;
 
-        public CountriesController(ILogger<CountriesController> logger, IHttpClientFactory httpClientFactory)
+        public CountriesController(ILogger<CountriesController> logger, CountryService countryService)
         {
             _logger = logger;
-            _httpClient = httpClientFactory.CreateClient();
+            _countryService = countryService;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         //[Authorize]
-        public async Task<IActionResult> GetAllContries()
+        public async Task<IActionResult> GetAllCountries(int page = 0, int itemsPerPage = 10)
         {
             try
             {
-                string url = $"https://restcountries.com/v3.1/all?fields=name,capital,latlng,cca2";
-
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-
-                // Lê e deserializa o JSON retornado
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-                var contriesData = JsonSerializer.Deserialize<object>(jsonResponse); // Substitua 'object' pelo seu modelo            }
-
-                return Ok(contriesData); 
+                var countriesData = await _countryService.GetAllCountriesAsync(page, itemsPerPage);
+                return Ok(countriesData);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao obter dados Paises");
-                return StatusCode(500, "Erro interno ao buscar Paises.");
+                _logger.LogError(ex, "Erro ao obter dados dos países");
+                return StatusCode(500, "Erro interno ao buscar dados dos países.");
+            }
+        }
+
+        [HttpGet("Page")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[Authorize]
+        public async Task<IActionResult> GetAllCountriesByPage(List<CountryModel> allCountries, int currentPage, int itemsPerPage)
+        {
+            try
+            {
+                var countriesData = await _countryService.GetWeatherForCurrentPageAsync(allCountries, currentPage, itemsPerPage);
+                return Ok(countriesData);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter dados dos países");
+                return StatusCode(500, "Erro interno ao buscar dados dos países.");
             }
         }
     }

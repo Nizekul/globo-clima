@@ -21,7 +21,7 @@ namespace GloboClima.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] LoginModel login)
         {
-            if (login.Username == "admin" && login.Password == "admin")
+            if (login.Username == "admin@admin.com" && login.Password == "admin")
             {
                 var claims = new[]
                 {

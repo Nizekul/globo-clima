@@ -13,11 +13,13 @@ namespace globo_clima.Models
         public Guid UserId { get; set; }  
         [JsonPropertyName("city")]
         public string City { get; set; }
-        [JsonPropertyName("country")]
-        public string Country { get; set; }
         [JsonPropertyName("lat")]
         public string Lat { get; set; }
         [JsonPropertyName("lon")]
         public string Lon { get; set; }
+        [JsonPropertyName("temp_c")]
+        public string? TempC { get; set; }
+        [JsonPropertyName("temp_f")]
+        public string? TempF { get; set; }
     }
 }
