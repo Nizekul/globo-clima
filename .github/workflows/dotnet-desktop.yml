@@ -1,46 +1,33 @@
-name: Deploy to EC2
+name: Deploy
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: [ dev ]
+
 jobs:
-  build:
+  Deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --no-restore
-
-      - name: Deploy to EC2
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
         env:
-          EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_URL: ${{ secrets.EC2_IP }}
-          USER_NAME: ${{ secrets.EC2_USER }}
-        uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
-        with:
-          EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
-          EC2_URL: $EC2_URL
-      - name: Create a new file on the EC2 instance with "hello-world"
-        run: ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL '
-          cd /globo-clima/globo-clima &&
-          git pull origin main &&
-          docker build -t globo-clima . &&
-          docker stop globo-clima || true &&
-          docker rm globo-clima || true &&
-          docker run -d -p 5000:5000 --name globo-clima globo-clima
-          '
+            PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+            HOSTNAME: ${{secrets.EC2_IP}}
+            USER_NAME: ${{secrets.EC2_USER}}
+      
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+              # Now we have got the access of EC2 and we will start the deploy .
+              cd /home/ubuntu/<PROJECT_DIRECTORY> &&
+              git checkout dev &&
+              git fetch --all &&
+              git reset --hard origin/dev &&
+              git pull origin dev &&
+              sudo npm i &&
+              sudo npm run build &&
+              sudo pm2 stop ./dist/index.js &&
+              sudo pm2 start ./dist/index.js
+              '
