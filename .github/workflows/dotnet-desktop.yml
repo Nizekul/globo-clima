@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }} 
           port: 22
           script: |
-            cd /home/ubuntu/globo-clima
+            cd /globo-clima/globo-clima
             git pull origin main
             docker build -t globo-clima .
             docker stop globo-clima || true 
