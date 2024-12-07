@@ -1,34 +1,24 @@
-name: Deploy to EC2
+name: teste
+
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches: [main]
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-        
-      - name: Restore dependencies
-        run: dotnet restore
+            - name: Build project
+              run: mvn clean install -DskipTests
+              
+            - name: Login Docker Hub
+              run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
-      - name: Build
-        run: dotnet build --no-restore
+            - name: Build docker image
+              run: docker build -t globo-clima/globo-clima .
 
-      - name: Login Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build docker image
-        run: docker build -t globo-clima/globo-clima .
-
-      - name: Push image docker
-        run: docker push globo-clima/globo-clima
+            - name: Push image docker
+              run: docker push globo-clima/globo-clima
