@@ -12,7 +12,7 @@ jobs:
               uses: actions/checkout@v3
               
             - name: Login Docker Hub
-              run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+              run: docker login -u ${{secrets.EC2_USER}} -p ${{secrets.EC2_USER}}
 
             - name: Build docker image
               run: docker build -t globo-clima/globo-clima .
