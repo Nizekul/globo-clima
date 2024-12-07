@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+env: 
+  USER: $"{{secrets.EC2_USER}}"
 
 jobs:
   build:
@@ -26,7 +28,7 @@ jobs:
         
       - name: Print USER_NAME
         run: |
-          echo "O valor do segredo EC2_USER é: $EC2_USER"
+          echo "O valor do segredo EC2_USER é: $USER"
           echo "$EC2_USER" > key
 
       - name: Build
