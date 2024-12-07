@@ -8,7 +8,7 @@ on:
       - main
 jobs:
   call-workflow-passing-data:
-    uses: globo-clima/.github/workflows/dotnet-desktop.yml@main
+    uses: .github/workflows/dotnet-desktop.yml@main
     with:
       config-path: .github/labeler.yml
     secrets: inherit
