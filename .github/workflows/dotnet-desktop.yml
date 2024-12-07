@@ -28,6 +28,8 @@ jobs:
         
       - name: Restore dependencies
         run: dotnet restore
+      - name: Visualizar dockername
+        run: echo "::add-mask::${{ secrets.DOCKER_USERNAME }}"
 
       - name: Build
         run: dotnet build --no-restore
