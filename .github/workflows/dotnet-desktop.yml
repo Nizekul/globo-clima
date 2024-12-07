@@ -28,7 +28,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Print USER_NAME
-        run: echo "USER_NAME: ${{ secrets.EC2_USER }}"
+        run: echo "USER_NAME:" ${{secrets.EC2_USER}}
 
       - name: Deploy to EC2
         env:
