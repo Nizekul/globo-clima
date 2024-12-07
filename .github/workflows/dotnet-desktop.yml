@@ -28,21 +28,21 @@ jobs:
 
       - name: Login Docker Hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-        
+
       - name: Build docker image
         run: docker build -t /globo-clima/globo-clima .
-        
+
       - name: Push image docker
         run: docker push /globo-clima/globo-clima
   deploy:
-        needs: build
-        runs-on: self-hosted
-        steps:
-            - name: Pull image from docker hub
-              run: docker pull globo-clima/globo-clima:latest
-              
-            - name: Remove docker container
-              run: docker rm -f globo-clima
-              
-            - name: Run docker container
-              run: docker run -d -p 5000:5000 --name globo-clima globo-clima/globo-clima
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull globo-clima/globo-clima:latest
+
+      - name: Remove docker container
+        run: docker rm -f globo-clima
+
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name globo-clima globo-clima/globo-clima
