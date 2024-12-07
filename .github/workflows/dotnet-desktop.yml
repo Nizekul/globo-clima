@@ -8,10 +8,15 @@ on:
       - main
 jobs:
   call-workflow-passing-data:
-    uses: .github/workflows/dotnet-desktop.yml@main
+    uses: octo-org/example-repo/.github/workflows/reusable-workflow.yml@main
     with:
-      config-path: .github/labeler.yml
-    secrets: inherit
+      config-path: .github/dotnet-desktop.yml
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+      EC2_IP: ${{ secrets.EC2_IP }}
+      EC2_USER: ${{ secrets.EC2_USER }}
   build:
     runs-on: ubuntu-latest
     steps:
