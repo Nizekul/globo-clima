@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -31,8 +31,15 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Login Docker Hub
-        run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+        run: docker login -u your_dockerhub_username -p ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build docker image
         run: docker build -t globo-clima/globo-clima .
