@@ -19,12 +19,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      
-      - name: Print USER_NAME
-        run: echo "USER_NAME:" ${{secrets.EC2_USER}}
-        env:
-          USER_NAME: ${{ secrets.EC2_USER }}
-        
+          
       - name: Restore dependencies
         run: dotnet restore
 
@@ -37,7 +32,9 @@ jobs:
           HOSTNAME: ${{ secrets.EC2_IP }}
           USER_NAME: ${{ secrets.EC2_USER }}
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+          echo "$PRIVATE_KEY" > private_key
+          chmod 400 private_key
+
           ssh -v -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
               cd /globo-clima/globo-clima
               git pull origin main
