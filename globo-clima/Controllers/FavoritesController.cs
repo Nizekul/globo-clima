@@ -1,9 +1,6 @@
 ﻿using globo_clima.Models;
 using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Text.Json;
-
 
 namespace globo_clima.Controllers
 {
@@ -12,14 +9,10 @@ namespace globo_clima.Controllers
     public class FavoritesController : Controller
     {
         private readonly FavoritesService _favoritesService;
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<CountriesController> _logger;
 
-        public FavoritesController(FavoritesService favoritesService, HttpClient httpClient, ILogger<CountriesController> logger)
+        public FavoritesController(FavoritesService favoritesService, ILogger<CountriesController> logger)
         {
             _favoritesService = favoritesService;
-            _httpClient = httpClient;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -40,7 +33,7 @@ namespace globo_clima.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateFavoriteAsync([FromBody] List<FavoritesModel> favorites)
+        public async Task<IActionResult> CreateFavoriteAsync([FromBody] FavoritesModel favorites)
         {
             var favoritesResult = await _favoritesService.CreateFavorites(favorites);
 
@@ -50,9 +43,9 @@ namespace globo_clima.Controllers
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteFavoriteAsync([FromBody] List<Guid> favorites)
+        public async Task<IActionResult> DeleteFavoriteAsync([FromQuery] Guid favoriteID, [FromQuery] Guid userID)
         {
-            var favoritesResult = await _favoritesService.DeleteFavorites(favorites);
+            var favoritesResult = await _favoritesService.DeleteFavorites(favoriteID, userID);
 
             return Ok(favoritesResult);
         }
@@ -60,9 +53,9 @@ namespace globo_clima.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateFavoriteAsync([FromBody] List<Guid> favorites)
+        public async Task<IActionResult> UpdateFavoriteAsync([FromQuery] List<FavoritesModel> favorites, [FromQuery] Guid userID)
         {
-            var favoritesResult = await _favoritesService.DeleteFavorites(favorites);
+            var favoritesResult = await _favoritesService.UpdateFavoriteAsync(favorites, userID);
 
             return Ok(favoritesResult);
         }

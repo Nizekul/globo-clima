@@ -1,3 +1,4 @@
+using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -10,15 +11,17 @@ namespace globo_clima.Controllers
         private readonly ILogger<WeatherController> _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly WeatherService _weatherService;    
 
-        public WeatherController(ILogger<WeatherController> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        public WeatherController(ILogger<WeatherController> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory, WeatherService weatherService)
         {
             _logger = logger;
             _configuration = configuration;
             _httpClient = httpClientFactory.CreateClient();
+            _weatherService = weatherService;
         }
 
-        [HttpGet]
+        [HttpGet("City")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         //[Authorize]
@@ -26,15 +29,25 @@ namespace globo_clima.Controllers
         {
             try
             {
-                string apiKey = _configuration["Envs:TokenWeather"];
-                string url = $"https://api.openweathermap.org/data/2.5/weather?q={weatherCity}&appid={apiKey}";
+                var weatherData = await _weatherService.GetWeatherByCityAsync(weatherCity);
+                return Ok(weatherData);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter dados do clima");
+                return StatusCode(500, "Erro interno ao buscar dados do clima.");
+            }
+        }
 
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-                var weatherData = JsonSerializer.Deserialize<object>(jsonResponse);
-
+        [HttpGet("Coordinates")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[Authorize]
+        public async Task<IActionResult> GetWeatherByCoodinates([FromQuery] string lat, [FromQuery] string lon)
+        {
+            try
+            {
+                var weatherData = await _weatherService.GetWeatherByCoordinatesAsync(lat, lon);
                 return Ok(weatherData);
             }
             catch (Exception ex)
@@ -52,16 +65,8 @@ namespace globo_clima.Controllers
         {
             try
             {
-                string concatenatedCodes = string.Join(",", codes);
-                string url = $"https://restcountries.com/v3.1/alpha?codes={concatenatedCodes}";
-
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-                var contriesData = JsonSerializer.Deserialize<object>(jsonResponse);
-
-                return Ok(contriesData);
+                var countriesData = await _weatherService.GetFavoritesAsync(codes);
+                return Ok(countriesData);
             }
             catch (Exception ex)
             {

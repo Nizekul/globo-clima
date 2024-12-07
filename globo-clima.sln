@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "globo_clima", "globo-clima\globo_clima.csproj", "{E8801B7C-6E3A-4998-B110-315535756375}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "globo-clima", "globo-clima\globo-clima.csproj", "{E8801B7C-6E3A-4998-B110-315535756375}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

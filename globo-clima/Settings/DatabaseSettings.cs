@@ -3,7 +3,7 @@
     public class DatabaseSettings
     {
         public const string KeyName = "Database";
-
-        public string TableName { get; set; } = default!;
+        public string FavoritesTableName { get; set; }
+        public string UsersTableName { get; set; }
     }
 }

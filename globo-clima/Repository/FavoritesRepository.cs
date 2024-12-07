@@ -24,7 +24,7 @@ namespace globo_clima.Repository
         {
             var request = new ScanRequest
             {
-                TableName = _databaseSettings.Value.TableName
+                TableName = _databaseSettings.Value.FavoritesTableName
             };
 
             var response = await _dynamoDBClient.ScanAsync(request);
@@ -45,77 +45,74 @@ namespace globo_clima.Repository
                 }
             }
 
+
             return favorites;
         }
 
-        public async Task<bool> CreateFavoritesAsync(List<FavoritesModel> favorites)
+        public async Task<bool> CreateFavoriteAsync(FavoritesModel favorite)
         {
-            var tasks = favorites.Select(async favorite =>
-            {
-                var itemAsAttributeMap = new Dictionary<string, AttributeValue>
-                {
-                    { "id", new AttributeValue { S = Guid.NewGuid().ToString() } }, 
-                    { "user_id", new AttributeValue { S = Guid.NewGuid().ToString() } },
-                    { "city", new AttributeValue { S = favorite.City } },
-                    { "country", new AttributeValue { S = favorite.Country } },
-                    { "lat", new AttributeValue { S = favorite.Lat } },
-                    { "lon", new AttributeValue { S = favorite.Lon } },
-                };
-
-                var createItemRequest = new PutItemRequest
-                {
-                    TableName = _databaseSettings.Value.TableName,
-                    Item = itemAsAttributeMap
-                };
-
-                var response = await _dynamoDBClient.PutItemAsync(createItemRequest);
-                return response.HttpStatusCode == HttpStatusCode.OK;
-            });
-
-            var results = await Task.WhenAll(tasks);
-
-            return results.All(success => success);
-        }
-
-        public async Task<bool> DeleteFavoritesAsync(List<Guid> favoritesIDs)
-        {
-            var tasks = favoritesIDs.Select(async favoriteID =>
-            {
-                var deleteItem = new DeleteItemRequest
-                {
-                    TableName = _databaseSettings.Value.TableName,
-                    Key = new Dictionary<string, AttributeValue>
-                    {
-                        { "id", new AttributeValue { S = favoriteID.ToString() } }
-                    }
-                };
-
-                var response = await _dynamoDBClient.DeleteItemAsync(deleteItem);
-                return response.HttpStatusCode == HttpStatusCode.OK;
-            });
-
-            var results = await Task.WhenAll(tasks);
-
-            return results.All(success => success);
-        }
-
-        public async Task<bool> UpdateFavoritesAsync(List<FavoritesModel> favorites)
-        {
-            var tasks = favorites.Select(async favorite =>
+            try
             {
                 var itemAsAttributeMap = new Dictionary<string, AttributeValue>
                 {
                     { "id", new AttributeValue { S = Guid.NewGuid().ToString() } },
                     { "user_id", new AttributeValue { S = Guid.NewGuid().ToString() } },
                     { "city", new AttributeValue { S = favorite.City } },
-                    { "country", new AttributeValue { S = favorite.Country } },
                     { "lat", new AttributeValue { S = favorite.Lat } },
                     { "lon", new AttributeValue { S = favorite.Lon } },
                 };
 
                 var createItemRequest = new PutItemRequest
                 {
-                    TableName = _databaseSettings.Value.TableName,
+                    TableName = _databaseSettings.Value.FavoritesTableName,
+                    Item = itemAsAttributeMap
+                };
+
+                var response = await _dynamoDBClient.PutItemAsync(createItemRequest);
+
+                // Retorna verdadeiro se o status da resposta for OK
+                return response.HttpStatusCode == HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                // Adiciona tratamento de erro, caso necessário
+                Console.WriteLine($"Erro ao criar favorito: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteFavoritesAsync(Guid favoriteId, Guid userID)
+        {
+            var deleteItem = new DeleteItemRequest
+            {
+                TableName = _databaseSettings.Value.FavoritesTableName,
+                Key = new Dictionary<string, AttributeValue>
+                {
+                    { "id", new AttributeValue { S = favoriteId.ToString() } },
+                    { "user_id", new AttributeValue { S = userID.ToString() } }
+                }
+            };
+
+            var response = await _dynamoDBClient.DeleteItemAsync(deleteItem);
+            return response.HttpStatusCode == HttpStatusCode.OK;
+        }
+
+        public async Task<bool> UpdateFavoritesAsync(List<FavoritesModel> favorites, Guid userID)
+        {
+            var tasks = favorites.Select(async favorite =>
+            {
+                var itemAsAttributeMap = new Dictionary<string, AttributeValue>
+                {
+                    { "id", new AttributeValue { S = favorites.ToString() } },
+                    { "user_id", new AttributeValue { S = userID.ToString() } },
+                    { "city", new AttributeValue { S = favorite.City } },
+                    { "lat", new AttributeValue { S = favorite.Lat } },
+                    { "lon", new AttributeValue { S = favorite.Lon } },
+                };
+
+                var createItemRequest = new PutItemRequest
+                {
+                    TableName = _databaseSettings.Value.FavoritesTableName,
                     Item = itemAsAttributeMap
                 };
 

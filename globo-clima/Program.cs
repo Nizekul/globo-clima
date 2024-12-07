@@ -19,6 +19,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<FavoritesRepository>();
 builder.Services.AddScoped<FavoritesService>();
+builder.Services.AddHttpClient<WeatherService>();
+builder.Services.AddScoped<WeatherService>();
+builder.Services.AddHttpClient<CountryService>();
+builder.Services.AddScoped<CountryService>();
 
 
 builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
