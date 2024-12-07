@@ -19,30 +19,15 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-          
-      - name: "check is MY_SECRET exists"
-        env: 
-            super_secret: ${{ secrets.DOCKER_USERNAME }}
-        if: ${{ env.DOCKER_USERNAME == '' }}
-        run: 'echo "echo the secret \"MY_SECRET\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"'
         
       - name: Restore dependencies
         run: dotnet restore
-      - name: Visualizar dockername
-        run: echo "::add-mask::${{ secrets.DOCKER_USERNAME }}"
 
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Login Docker Hub
-        run: docker login -u your_dockerhub_username -p ${{ secrets.DOCKER_TOKEN }}
+        run: docker login -u lukestronda -p ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build docker image
         run: docker build -t globo-clima/globo-clima .
