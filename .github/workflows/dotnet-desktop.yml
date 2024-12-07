@@ -25,7 +25,8 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Login Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        with:
+          run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build docker image
         run: docker build -t globo-clima/globo-clima .
