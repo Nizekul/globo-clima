@@ -28,13 +28,13 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_IP }}
-          username: ${{ secrets.EC2_USER }} 
-          key: ${{ secrets.EC2_SSH_KEY }} 
-          port: 22
-          script: |
+        env:
+            PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY}}
+            HOSTNAME: ${{secrets.EC2_IP}}
+            USER_NAME: ${{secrets.EC2_USER}}
+        run:
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             cd /globo-clima/globo-clima
             git pull origin main
             docker build -t globo-clima .
