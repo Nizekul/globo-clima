@@ -22,6 +22,8 @@ jobs:
       
       - name: Print USER_NAME
         run: echo "USER_NAME:" ${{secrets.EC2_USER}}
+        env:
+          USER_NAME: ${{ secrets.EC2_USER }}
         
       - name: Restore dependencies
         run: dotnet restore
