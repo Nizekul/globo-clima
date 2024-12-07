@@ -7,33 +7,27 @@ on:
   pull_request:
     branches:
       - main
-env: 
-  USER: $"{{secrets.EC2_USER}}"
-
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      
+      - name: Print USER_NAME
+        run: echo "USER_NAME:" ${{secrets.EC2_USER}}
         
       - name: Restore dependencies
         run: dotnet restore
-        
-      - name: Print USER_NAME
-        run: |
-          echo "O valor do segredo EC2_USER é: $USER"
-          echo "$EC2_USER" > key
 
       - name: Build
         run: dotnet build --no-restore
-
 
       - name: Deploy to EC2
         env:
