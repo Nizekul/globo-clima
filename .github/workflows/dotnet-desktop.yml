@@ -7,6 +7,11 @@ on:
   pull_request:
     branches:
       - main
+
+env:
+  DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,13 +32,14 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Login Docker Hub
-        run: docker login -u ${{env.DOCKER_USERNAME}} -p ${{env.DOCKER_PASSWORD}}
+        run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
       - name: Build docker image
-        run: docker build -t /globo-clima/globo-clima .
+        run: docker build -t globo-clima/globo-clima .
 
       - name: Push image docker
-        run: docker push /globo-clima/globo-clima
+        run: docker push globo-clima/globo-clima
+
   deploy:
     needs: build
     runs-on: self-hosted
@@ -42,7 +48,7 @@ jobs:
         run: docker pull globo-clima/globo-clima:latest
 
       - name: Remove docker container
-        run: docker rm -f globo-clima
+        run: docker rm -f globo-clima || true
 
       - name: Run docker container
         run: docker run -d -p 5000:5000 --name globo-clima globo-clima/globo-clima
