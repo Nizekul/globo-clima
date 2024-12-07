@@ -23,12 +23,13 @@ jobs:
         
       - name: Restore dependencies
         run: dotnet restore
+        
+      - name: Print USER_NAME
+        run: 'echo "$EC2_USER" > key'
 
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Print USER_NAME
-        run: 'echo "$SSH_KEY" > key'
 
       - name: Deploy to EC2
         env:
