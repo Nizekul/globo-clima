@@ -34,4 +34,4 @@ jobs:
           docker build -t globo-clima .
 
       - name: Push image docker
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/globo-clima
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/globo-clima:latest
