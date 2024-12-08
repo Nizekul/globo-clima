@@ -67,7 +67,6 @@ jobs:
                   -e Jwt__Audience="${Jwt__Audience}" \
                   -e TokenWeather="${TokenWeather}" \
                   lukestronda/globo-clima
-                         sudo docker run -d -p 5000:5000 --name globo-clima lukestronda/globo-clima
                          sudo a2ensite globo-clima.conf
                          sudo systemctl reload apache2
                          sudo systemctl restart apache2
