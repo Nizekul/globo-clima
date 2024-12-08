@@ -33,7 +33,7 @@ jobs:
           USER: ${{ secrets.DOCKER_USERNAME }}
         run: |
           cd globo-clima 
-          docker build -t globo-clima .
+          docker build -t globo-clima globo-clima .
 
       - name: Push image docker
         run: docker push ${USER}/globo-clima:latest
