@@ -18,9 +18,9 @@ namespace globo_clima.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAllFavoritesAsync()
+        public async Task<IActionResult> GetFavoritesByUserIdAsync([FromQuery] Guid userID)
         {
-            var favorites = await _favoritesService.GetAllFavoritesAsync();
+            var favorites = await _favoritesService.GetFavoritesByUserIdAsync(userID);
 
             if (favorites == null || favorites.Count == 0)
             {

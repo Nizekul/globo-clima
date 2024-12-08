@@ -20,11 +20,16 @@ namespace globo_clima.Repository
             _databaseSettings = databaseSettings;
         }
 
-        public async Task<List<FavoriteModel>> GetAllFavoritesAsync()
+        public async Task<List<FavoriteModel>> GetFavoritesByUserIdAsync(Guid userId)
         {
             var request = new ScanRequest
             {
-                TableName = _databaseSettings.Value.FavoritesTableName
+                TableName = _databaseSettings.Value.FavoritesTableName,
+                FilterExpression = "user_id = :userId",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    { ":userId", new AttributeValue { S = userId.ToString() } }
+                }
             };
 
             var response = await _dynamoDBClient.ScanAsync(request);
@@ -38,13 +43,13 @@ namespace globo_clima.Repository
             foreach (var item in response.Items)
             {
                 var document = Document.FromAttributeMap(item);
-                var favoritesModel = JsonSerializer.Deserialize<FavoriteModel>(document.ToJson());
-                if (favoritesModel != null)
+                var favoriteModel = JsonSerializer.Deserialize<FavoriteModel>(document.ToJson());
+
+                if (favoriteModel != null)
                 {
-                    favorites.Add(favoritesModel);
+                    favorites.Add(favoriteModel);
                 }
             }
-
 
             return favorites;
         }
@@ -56,7 +61,7 @@ namespace globo_clima.Repository
                 var itemAsAttributeMap = new Dictionary<string, AttributeValue>
                 {
                     { "id", new AttributeValue { S = Guid.NewGuid().ToString() } },
-                    { "user_id", new AttributeValue { S = Guid.NewGuid().ToString() } },
+                    { "user_id", new AttributeValue { S = (favorite.UserId).ToString() } },
                     { "city", new AttributeValue { S = favorite.City } },
                     { "lat", new AttributeValue { S = favorite.Lat } },
                     { "lon", new AttributeValue { S = favorite.Lon } },

@@ -31,7 +31,7 @@ namespace globo_clima.Controllers
 
                 if (userResult)
                 {
-                    return CreatedAtAction(nameof(CreateUserAsync), new { id = user.Id }, user);
+                    return Ok(userResult);
                 }
 
                 return BadRequest(new { message = "Erro ao criar o usuário. Tente novamente mais tarde." });

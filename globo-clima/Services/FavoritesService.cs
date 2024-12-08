@@ -14,9 +14,10 @@ namespace globo_clima.Services
             _weatherService = weatherService;
         }
 
-        public async Task<List<FavoriteModel>> GetAllFavoritesAsync()
+        public async Task<List<FavoriteModel>> GetFavoritesByUserIdAsync(Guid userId)
         {
-            var favorites = await _favoritesRepository.GetAllFavoritesAsync();
+
+            var favorites = await _favoritesRepository.GetFavoritesByUserIdAsync(userId);
 
             if (favorites == null || favorites.Count == 0)
             {

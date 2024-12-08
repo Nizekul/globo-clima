@@ -4,7 +4,7 @@ namespace globo_clima.Repository
 {
     public interface IFavoritesRepository
     {
-        Task<List<FavoriteModel>> GetAllFavoritesAsync();
+        Task<List<FavoriteModel>> GetFavoritesByUserIdAsync(Guid userId);
 
         Task<bool> CreateFavoriteAsync(FavoriteModel favorite);
 

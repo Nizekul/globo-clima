@@ -9,7 +9,6 @@ namespace globo_clima.Models
         [SwaggerSchema(Description = "ID do favorito. Gerado automaticamente pelo sistema.", ReadOnly = true)]
         public Guid id { get; set; }
         [JsonPropertyName("user_id")]
-        [SwaggerSchema(Description = "ID do Usuario. Gerado automaticamente pelo sistema.", ReadOnly = true)]
         public Guid UserId { get; set; }  
         [JsonPropertyName("city")]
         public string City { get; set; }
