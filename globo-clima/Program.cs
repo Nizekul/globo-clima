@@ -4,9 +4,7 @@ using globo_clima.Repository;
 using globo_clima.Services;
 using globo_clima.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Filters;
-using System.Reflection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
