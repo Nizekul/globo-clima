@@ -43,7 +43,7 @@ jobs:
         runs-on: self-hosted
         steps:
             - name: Pull image from docker hub
-              run: docker pull dlukestronda/globo-clima:latest
+              run: docker pull lukestronda/globo-clima:latest
             - name: Remove docker container
               run: docker rm -f globo-clima
             - name: Run docker container
