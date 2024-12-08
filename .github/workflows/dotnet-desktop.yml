@@ -6,8 +6,6 @@ on:
   pull_request:
     branches:
       - main
-env:
-  USER: ${{ secrets.DOCKER_USERNAME }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,48 +23,29 @@ jobs:
 
       - name: Build
         run: dotnet build --no-restore
-
-      - name: Login Docker Hub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Build docker image
-        run: |
-          cd globo-clima 
-          docker build -t lukestronda/globo-clima .
-
-      - name: Push image docker
-        run: docker push lukestronda/globo-clima:latest
   
   deploy:
-        needs: build
-        runs-on: self-hosted
-        steps:
-            - name: Pull image from docker hub
-              run: sudo docker pull lukestronda/globo-clima:latest
-            - name: Remove docker container
-              run: sudo docker rm -f globo-clima
-            - name: Run docker container
-              env:
-                AWS__Region: ${{ secrets.AWS_REGION }}
-                AWS__AccessKey: ${{ secrets.AWS_ACCESS_KEY }}
-                AWS__SecretKey: ${{ secrets.AWS_SECRET_KEY }}
-                Jwt__Key: ${{ secrets.JWT_KEY }}
-                Jwt__Issuer: ${{ secrets.JWT_ISSUER }}
-                Jwt__Audience: ${{ secrets.JWT_AUDIENCE }}
-                TokenWeather: ${{ secrets.TOKEN_WEATHER }}
-              run: |
-                sudo docker run -d \
-                  -p 5000:5000 \
-                  --name globo-clima \
-                  -e AWS__Region="${AWS__Region}" \
-                  -e AWS__AccessKey="${AWS__AccessKey}" \
-                  -e AWS__SecretKey="${AWS__SecretKey}" \
-                  -e Jwt__Key="${Jwt__Key}" \
-                  -e Jwt__Issuer="${Jwt__Issuer}" \
-                  -e Jwt__Audience="${Jwt__Audience}" \
-                  -e TokenWeather="${TokenWeather}" \
-                  lukestronda/globo-clima
-                         sudo a2ensite globo-clima.conf
-                         sudo systemctl reload apache2
-                         sudo systemctl restart apache2
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull branch
+        run: |
+          cd /home/ubuntu/globo-clima/globo-clima
+          sudo git pull origin main
+            
+      - name: Build docker
+        run: |
+          cd /home/ubuntu/globo-clima/globo-clima
+          sudo docker build -t globo-clima .
+          
+      - name: Remove docker container
+        run: |
+          sudo docker rm -f globo-clima
+  
+      - name: Run docker container
+        run: |
+          sudo docker run -d -p 5000:5000 --name globo-clima globo-clima
+          sudo a2ensite globo-clima.conf
+          sudo systemctl reload apache2
+          sudo systemctl restart apache2
+
