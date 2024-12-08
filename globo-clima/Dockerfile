@@ -22,3 +22,12 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /App
 COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "globo-clima.dll"]
+
+# Definir variáveis de ambiente no container final
+ENV AWS_REGION=${AWS_REGION}
+ENV AWS_ACCESS_KEY=${AWS__AccessKey}
+ENV AWS_SECRET_KEY=${AWS__SecretKey}
+ENV JWT_KEY=${Jwt__Key}
+ENV JWT_ISSUER=${Jwt__Issuer}
+ENV JWT_AUDIENCE=${Jwt__Audience}
+ENV TOKEN_WEATHER=${TokenWeather}
