@@ -17,3 +17,4 @@ obj/
 /.vs
 /.vs
 /globo-clima/publish
+globo-clima/appsettings.json
