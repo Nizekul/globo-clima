@@ -25,23 +25,27 @@ jobs:
         run: dotnet build --no-restore
   
   deploy:
-        needs: build
-        runs-on: self-hosted
-        steps:
-            - name: Pull branch
-              run: |
-                cd globo-clima
-                sudo git pull origin main
-              
-            - name: Pull image from docker hub
-              run: sudo docker build -t globo-clima .
-              
-            - name: Remove docker container
-              run: sudo docker rm -f globo-clima
-              
-            - name: Run docker container
-              run: |
-                  sudo docker run -d -p 5000:5000 --name globo-clima
-                  sudo a2ensite globo-clima.conf
-                  sudo systemctl reload apache2
-                  sudo systemctl restart apache2
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull branch
+        run: |
+          cd /home/ubuntu/globo-clima/globo-clima
+          sudo git pull origin main
+            
+      - name: Build docker
+        run: |
+          cd /home/ubuntu/globo-clima/globo-clima
+          sudo docker build -t globo-clima .
+          
+      - name: Remove docker container
+        run: |
+          sudo docker rm -f globo-clima
+  
+      - name: Run docker container
+        run: |
+          sudo docker run -d -p 5000:5000 --name globo-clima globo-clima
+          sudo a2ensite globo-clima.conf
+          sudo systemctl reload apache2
+          sudo systemctl restart apache2
+
