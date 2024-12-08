@@ -8,19 +8,19 @@ namespace globo_clima.Services
         private FavoritesRepository _favoritesRepository;
         private WeatherService _weatherService;
 
-        public FavoritesService(FavoritesRepository mangaRepository, WeatherService weatherService)
+        public FavoritesService(FavoritesRepository favoriteRepository, WeatherService weatherService)
         {
-            _favoritesRepository = mangaRepository;
+            _favoritesRepository = favoriteRepository;
             _weatherService = weatherService;
         }
 
-        public async Task<List<FavoritesModel>> GetAllFavoritesAsync()
+        public async Task<List<FavoriteModel>> GetAllFavoritesAsync()
         {
             var favorites = await _favoritesRepository.GetAllFavoritesAsync();
 
             if (favorites == null || favorites.Count == 0)
             {
-                return new List<FavoritesModel>();
+                return new List<FavoriteModel>();
             }
 
             foreach (var favorite in favorites)
@@ -35,7 +35,7 @@ namespace globo_clima.Services
                     }
                     catch
                     {
-                        return new List<FavoritesModel>();
+                        return new List<FavoriteModel>();
                     }
                 }
             }
@@ -43,7 +43,7 @@ namespace globo_clima.Services
             return favorites;
         }
 
-        public Task<bool> CreateFavorites(FavoritesModel favorites)
+        public Task<bool> CreateFavorites(FavoriteModel favorites)
         {
             return _favoritesRepository.CreateFavoriteAsync(favorites);
         }
@@ -51,11 +51,6 @@ namespace globo_clima.Services
         public Task<bool> DeleteFavorites(Guid favorites, Guid userID)
         {
             return _favoritesRepository.DeleteFavoritesAsync(favorites, userID);
-        }
-
-        public Task<bool> UpdateFavoriteAsync(List<FavoritesModel> favorites, Guid userID)
-        {
-            return _favoritesRepository.UpdateFavoritesAsync(favorites, userID);
         }
 
     }

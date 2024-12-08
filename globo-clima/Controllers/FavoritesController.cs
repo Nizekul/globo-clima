@@ -33,7 +33,7 @@ namespace globo_clima.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateFavoriteAsync([FromBody] FavoritesModel favorites)
+        public async Task<IActionResult> CreateFavoriteAsync([FromBody] FavoriteModel favorites)
         {
             var favoritesResult = await _favoritesService.CreateFavorites(favorites);
 
@@ -50,14 +50,5 @@ namespace globo_clima.Controllers
             return Ok(favoritesResult);
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateFavoriteAsync([FromQuery] List<FavoritesModel> favorites, [FromQuery] Guid userID)
-        {
-            var favoritesResult = await _favoritesService.UpdateFavoriteAsync(favorites, userID);
-
-            return Ok(favoritesResult);
-        }
     }
 }

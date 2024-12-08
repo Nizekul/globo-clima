@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace globo_clima.Models
 {
-    public class FavoritesModel
+    public class FavoriteModel
     {
         [JsonPropertyName("id")]
         [SwaggerSchema(Description = "ID do favorito. Gerado automaticamente pelo sistema.", ReadOnly = true)]

@@ -20,7 +20,7 @@ namespace globo_clima.Repository
             _databaseSettings = databaseSettings;
         }
 
-        public async Task<List<FavoritesModel>> GetAllFavoritesAsync()
+        public async Task<List<FavoriteModel>> GetAllFavoritesAsync()
         {
             var request = new ScanRequest
             {
@@ -31,14 +31,14 @@ namespace globo_clima.Repository
 
             if (response.Items.Count == 0)
             {
-                return new List<FavoritesModel>();
+                return new List<FavoriteModel>();
             }
 
-            var favorites = new List<FavoritesModel>();
+            var favorites = new List<FavoriteModel>();
             foreach (var item in response.Items)
             {
                 var document = Document.FromAttributeMap(item);
-                var favoritesModel = JsonSerializer.Deserialize<FavoritesModel>(document.ToJson());
+                var favoritesModel = JsonSerializer.Deserialize<FavoriteModel>(document.ToJson());
                 if (favoritesModel != null)
                 {
                     favorites.Add(favoritesModel);
@@ -49,7 +49,7 @@ namespace globo_clima.Repository
             return favorites;
         }
 
-        public async Task<bool> CreateFavoriteAsync(FavoritesModel favorite)
+        public async Task<bool> CreateFavoriteAsync(FavoriteModel favorite)
         {
             try
             {
@@ -95,34 +95,6 @@ namespace globo_clima.Repository
 
             var response = await _dynamoDBClient.DeleteItemAsync(deleteItem);
             return response.HttpStatusCode == HttpStatusCode.OK;
-        }
-
-        public async Task<bool> UpdateFavoritesAsync(List<FavoritesModel> favorites, Guid userID)
-        {
-            var tasks = favorites.Select(async favorite =>
-            {
-                var itemAsAttributeMap = new Dictionary<string, AttributeValue>
-                {
-                    { "id", new AttributeValue { S = favorites.ToString() } },
-                    { "user_id", new AttributeValue { S = userID.ToString() } },
-                    { "city", new AttributeValue { S = favorite.City } },
-                    { "lat", new AttributeValue { S = favorite.Lat } },
-                    { "lon", new AttributeValue { S = favorite.Lon } },
-                };
-
-                var createItemRequest = new PutItemRequest
-                {
-                    TableName = _databaseSettings.Value.FavoritesTableName,
-                    Item = itemAsAttributeMap
-                };
-
-                var response = await _dynamoDBClient.PutItemAsync(createItemRequest);
-                return response.HttpStatusCode == HttpStatusCode.OK;
-            });
-
-            var results = await Task.WhenAll(tasks);
-
-            return results.All(success => success);
         }
 
     }

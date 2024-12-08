@@ -1,52 +1,50 @@
 ﻿using globo_clima.Models;
+using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace GloboClima.Controllers
+namespace globo_clima.Controllers
 {
     [ApiController]
     [Route("v1/[controller]")]
     public class AuthController : Controller
     {
-        private readonly IConfiguration _configuration;
+        private readonly AuthService _authService;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(AuthService authService)
         {
-            _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] LoginModel login)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            if (login.Username == "admin@admin.com" && login.Password == "admin")
+            try
             {
-                var claims = new[]
+                var user = await _authService.GetUserAsync(login);
+
+                if (user == null)
                 {
-                    new Claim(ClaimTypes.Name, login.Username),
-                    new Claim(ClaimTypes.Role, "Admin")
-                };
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken(
-                    issuer: _configuration["Jwt:Issuer"],
-                    audience: _configuration["Jwt:Audience"],
-                    claims: claims,
-                    expires: DateTime.Now.AddHours(1),
-                    signingCredentials: creds
-                );
+                    return Unauthorized("Usuário ou senha inválidos.");
+                }
 
                 return Ok(new
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token)
+                    name = user.Name,
+                    id = user.Id
                 });
             }
-
-            return Unauthorized();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao processar login: {ex.Message}");
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
     }

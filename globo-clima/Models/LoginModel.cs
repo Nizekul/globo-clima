@@ -1,8 +1,12 @@
-﻿namespace globo_clima.Models
+﻿using System.Text.Json.Serialization;
+
+namespace globo_clima.Models
 {
     public class LoginModel
     {
-        public required string Username { get; set; }
-        public required string Password { get; set; }
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
+        [JsonPropertyName("password")]
+        public string Password { get; set; }
     }
 }

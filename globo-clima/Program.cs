@@ -21,6 +21,10 @@ builder.Services.AddHttpClient<WeatherService>();
 builder.Services.AddScoped<WeatherService>();
 builder.Services.AddHttpClient<CountryService>();
 builder.Services.AddScoped<CountryService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AuthRepository>();
+builder.Services.AddScoped<UsersRepository>();
+builder.Services.AddScoped<UserService>();
 
 
 builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
