@@ -6,6 +6,8 @@ on:
   pull_request:
     branches:
       - main
+env:
+  USER: ${{ secrets.DOCKER_USERNAME }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,11 +31,9 @@ jobs:
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build docker image
-        env:
-          USER: ${{ secrets.DOCKER_USERNAME }}
         run: |
           cd globo-clima 
-          docker build -t globo-clima globo-clima .
+          docker build -t $USER/globo-clima .
 
       - name: Push image docker
-        run: docker push ${USER}/globo-clima:latest
+        run: docker push $USER/globo-clima:latest
