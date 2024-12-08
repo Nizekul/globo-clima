@@ -18,3 +18,4 @@ obj/
 /.vs
 /globo-clima/publish
 globo-clima/appsettings.json
+globo-clima/globo-clima.csproj.user
