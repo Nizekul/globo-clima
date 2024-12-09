@@ -22,9 +22,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: |
-            dotnet add reference ./globo-clima/globo-clima.csproj
-            dotnet build
+        run: dotnet build --no-restore
         
       - name: Rodar testes
         run: dotnet test globo-clima/globo_clima.Tests
