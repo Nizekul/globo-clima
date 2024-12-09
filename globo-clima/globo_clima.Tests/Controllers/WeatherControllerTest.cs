@@ -2,7 +2,6 @@
 using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Microsoft.Extensions.Logging;
 
 namespace globo_clima.globo_clima.Tests
 {

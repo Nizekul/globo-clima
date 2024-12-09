@@ -1,5 +1,6 @@
 using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
+using Xunit;
 
 namespace globo_clima.Controllers
 {
