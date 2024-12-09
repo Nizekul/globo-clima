@@ -23,7 +23,7 @@ jobs:
 
       - name: Build
         run: |
-            dotnet add reference /globo-clima/globo-clima.csproj
+            dotnet add reference ./globo-clima/globo-clima.csproj
             dotnet build
         
       - name: Rodar testes
