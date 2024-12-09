@@ -18,7 +18,7 @@ namespace globo_clima.Services
             _weatherService = weatherService;
         }
 
-        public async Task<List<CountryModel>> GetAllCountriesAsync(int page, int itemsPerPage)
+        public async Task<List<CountryModel>> GetAllCountriesAsync()
         {
             try
             {

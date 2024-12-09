@@ -21,12 +21,11 @@ namespace globo_clima.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize]
-        public async Task<IActionResult> GetAllCountries(int page = 0, int itemsPerPage = 10)
+        public async Task<IActionResult> GetAllCountries()
         {
             try
             {
-                var countriesData = await _countryService.GetAllCountriesAsync(page, itemsPerPage);
+                var countriesData = await _countryService.GetAllCountriesAsync();
                 return Ok(countriesData);
             }
             catch (Exception ex)

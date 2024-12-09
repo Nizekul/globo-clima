@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace globo_clima.Services
 {
-    public class WeatherService
+    public class WeatherService : IWeatherService
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;

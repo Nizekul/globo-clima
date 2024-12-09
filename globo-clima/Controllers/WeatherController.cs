@@ -9,22 +9,17 @@ namespace globo_clima.Controllers
     public class WeatherController : Controller
     {
         private readonly ILogger<WeatherController> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient;
-        private readonly WeatherService _weatherService;    
+        private readonly IWeatherService _weatherService;    
 
-        public WeatherController(ILogger<WeatherController> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory, WeatherService weatherService)
+        public WeatherController(ILogger<WeatherController> logger, IWeatherService weatherService)
         {
             _logger = logger;
-            _configuration = configuration;
-            _httpClient = httpClientFactory.CreateClient();
             _weatherService = weatherService;
         }
 
         [HttpGet("City")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[Authorize]
         public async Task<IActionResult> GetWeatherByCity([FromQuery] string weatherCity)
         {
             try

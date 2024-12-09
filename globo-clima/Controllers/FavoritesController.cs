@@ -8,9 +8,9 @@ namespace globo_clima.Controllers
     [Route("v1/[controller]")]
     public class FavoritesController : Controller
     {
-        private readonly FavoritesService _favoritesService;
+        private readonly IFavoritesService _favoritesService;
 
-        public FavoritesController(FavoritesService favoritesService, ILogger<CountriesController> logger)
+        public FavoritesController(IFavoritesService favoritesService)
         {
             _favoritesService = favoritesService;
         }

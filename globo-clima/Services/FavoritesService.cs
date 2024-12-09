@@ -3,10 +3,11 @@ using globo_clima.Repository;
 
 namespace globo_clima.Services
 {
-    public class FavoritesService
+    public class FavoritesService : IFavoritesService
     {
         private FavoritesRepository _favoritesRepository;
         private WeatherService _weatherService;
+
 
         public FavoritesService(FavoritesRepository favoriteRepository, WeatherService weatherService)
         {
