@@ -23,7 +23,7 @@ namespace globo_clima.globo_clima.Tests.Controllers
         public async Task GetFavoritesByUserIdAsync_ReturnsOk_WhenFavoritesExist()
         {
 
-            var userId = Guid.Parse("9ea39a47-34ef-4dfd-84c7-572badf89b8d");
+            var userId = Guid.Parse("9ea39a47-34ef-4dfd-84c7-572badf89b8");
             var mockFavorites = new List<FavoriteModel>
             {
                 new FavoriteModel
