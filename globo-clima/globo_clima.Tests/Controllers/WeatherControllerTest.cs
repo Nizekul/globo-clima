@@ -2,6 +2,9 @@
 using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Xunit;
+using FluentAssertions;
+
 
 namespace globo_clima.globo_clima.Tests
 {
