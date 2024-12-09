@@ -26,7 +26,6 @@ builder.Services.AddScoped<AuthRepository>();
 builder.Services.AddScoped<UsersRepository>();
 builder.Services.AddScoped<UserService>();
 
-
 builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
 builder.Services.AddSingleton<IAmazonDynamoDB>(sp => new AmazonDynamoDBClient(
     awsOptions["AccessKey"],

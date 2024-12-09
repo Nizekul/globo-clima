@@ -1,10 +1,8 @@
-﻿using FluentAssertions;
-using globo_clima.Controllers;
-using globo_clima.Models;
+﻿using globo_clima.Controllers;
 using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Xunit;
+using Microsoft.Extensions.Logging;
 
 namespace globo_clima.globo_clima.Tests
 {
@@ -12,13 +10,11 @@ namespace globo_clima.globo_clima.Tests
     {
         private readonly Mock<IWeatherService> _mockService;
         private readonly WeatherController _controller;
-        private readonly Mock<ILogger<WeatherController>> _mockLogger;
 
         public WeatherControllerTest()
         {
             _mockService = new Mock<IWeatherService>();
-            _mockLogger = new Mock<ILogger<WeatherController>>();
-            _controller = new WeatherController(_mockLogger.Object, _mockService.Object);
+            _controller = new WeatherController(_mockService.Object);
         }
 
         [Fact]

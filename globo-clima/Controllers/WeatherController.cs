@@ -1,6 +1,5 @@
 using globo_clima.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace globo_clima.Controllers
 {
@@ -8,12 +7,10 @@ namespace globo_clima.Controllers
     [Route("v1/[controller]")]
     public class WeatherController : Controller
     {
-        private readonly ILogger<WeatherController> _logger;
         private readonly IWeatherService _weatherService;    
 
-        public WeatherController(ILogger<WeatherController> logger, IWeatherService weatherService)
+        public WeatherController(IWeatherService weatherService)
         {
-            _logger = logger;
             _weatherService = weatherService;
         }
 
@@ -29,7 +26,6 @@ namespace globo_clima.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao obter dados do clima");
                 return StatusCode(500, "Erro interno ao buscar dados do clima.");
             }
         }
@@ -47,7 +43,6 @@ namespace globo_clima.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao obter dados do clima");
                 return StatusCode(500, "Erro interno ao buscar dados do clima.");
             }
         }
@@ -65,7 +60,6 @@ namespace globo_clima.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao obter Favoritos");
                 return StatusCode(500, "Erro interno ao buscar Favoritos.");
             }
         }
