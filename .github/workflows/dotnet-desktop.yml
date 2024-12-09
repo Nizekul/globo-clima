@@ -25,9 +25,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Rodar testes
-        run: |
-          cd globo-clima/globo_clima.Tests
-          dotnet test
+        run: dotnet test
 
   deploy:
     needs: build
