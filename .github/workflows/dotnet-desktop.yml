@@ -24,8 +24,8 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
         
-      - name: Rodar testes 
-        run: dotnet test globo-clima/globo_clima.Tests
+      - name: Rodar testes
+        run: dotnet test globo-clima/globo_clima.Tests --no-build --logger trx
   
   deploy:
     needs: build
