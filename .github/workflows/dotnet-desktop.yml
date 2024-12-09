@@ -12,21 +12,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-          
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-       
+
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
-        
+
       - name: Rodar testes
-        run: dotnet test globo-clima/globo_clima.Tests
-  
+        run: |
+          cd globo_clima.Tests
+          dotnet add reference ../globo-clima.csproj
+          dotnet test globo-clima/globo_clima.Tests
+
   deploy:
     needs: build
     runs-on: self-hosted
@@ -35,20 +38,19 @@ jobs:
         run: |
           cd /home/ubuntu/globo-clima/globo-clima
           sudo git pull origin main
-            
+
       - name: Build docker
         run: |
           cd /home/ubuntu/globo-clima/globo-clima
           sudo docker build -t globo-clima .
-          
+
       - name: Remove docker container
         run: |
           sudo docker rm -f globo-clima
-  
+
       - name: Run docker container
         run: |
           sudo docker run -d -p 5000:5000 --name globo-clima globo-clima
           sudo a2ensite globo-clima.conf
           sudo systemctl reload apache2
           sudo systemctl restart apache2
-

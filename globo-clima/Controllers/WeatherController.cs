@@ -25,7 +25,7 @@ namespace globo_clima.Controllers
                 var weatherData = await _weatherService.GetWeatherByCityAsync(weatherCity);
                 return Ok(weatherData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Erro interno ao buscar dados do clima.");
             }
@@ -42,7 +42,7 @@ namespace globo_clima.Controllers
                 var weatherData = await _weatherService.GetWeatherByCoordinatesAsync(lat, lon);
                 return Ok(weatherData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Erro interno ao buscar dados do clima.");
             }
@@ -59,7 +59,7 @@ namespace globo_clima.Controllers
                 var countriesData = await _weatherService.GetFavoritesAsync(codes);
                 return Ok(countriesData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Erro interno ao buscar Favoritos.");
             }
