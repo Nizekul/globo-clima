@@ -27,8 +27,7 @@ jobs:
       - name: Rodar testes
         run: |
           cd globo-clima/globo_clima.Tests
-          dotnet add reference ../globo-clima.csproj
-          dotnet test globo-clima/globo_clima.Tests
+          dotnet test
 
   deploy:
     needs: build
