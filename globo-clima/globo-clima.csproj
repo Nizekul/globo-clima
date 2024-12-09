@@ -48,9 +48,4 @@
   <ItemGroup>
     <Folder Include="Middleware\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="globo-clima.csproj" />
-  </ItemGroup>
-
 </Project>
